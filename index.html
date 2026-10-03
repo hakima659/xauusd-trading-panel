@@ -1,1 +1,816 @@
 
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>پنل XAUUSD | ربات معامله‌گر</title>
+
+  <meta name="description"
+        content="پنل رایگان تحلیل و کنترل آزمایشی ربات XAUUSD">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background: #0b1020;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+      padding: 16px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #151d35, #10162a);
+      border: 1px solid #273354;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 15px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    .logo {
+      font-size: 27px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #aeb9d4;
+      font-size: 14px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 14px;
+      background: rgba(0, 200, 120, .12);
+      color: #49e39b;
+      border: 1px solid rgba(73,227,155,.25);
+      border-radius: 30px;
+      padding: 7px 14px;
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #49e39b;
+      box-shadow: 0 0 10px #49e39b;
+    }
+
+    .price-card {
+      background: linear-gradient(135deg, #17213b, #10182d);
+      border: 1px solid #2b385d;
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .symbol {
+      color: #aeb9d4;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: 42px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .price-change {
+      margin-top: 8px;
+      color: #49e39b;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .card {
+      background: #121a30;
+      border: 1px solid #273354;
+      border-radius: 16px;
+      padding: 17px;
+    }
+
+    .label {
+      color: #8e9ab8;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .value {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .buy {
+      color: #49e39b;
+    }
+
+    .sell {
+      color: #ff6878;
+    }
+
+    .neutral {
+      color: #f5c451;
+    }
+
+    .chart-card {
+      background: #121a30;
+      border: 1px solid #273354;
+      border-radius: 18px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 250px;
+      display: block;
+      background: #0d1426;
+      border-radius: 12px;
+    }
+
+    .signal {
+      text-align: center;
+      padding: 20px;
+      border-radius: 18px;
+      background: #121a30;
+      border: 1px solid #273354;
+      margin-bottom: 15px;
+    }
+
+    .signal-title {
+      color: #9ca8c5;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .signal-main {
+      font-size: 34px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .signal-description {
+      color: #aeb9d4;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .levels {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .level {
+      background: #0d1426;
+      border-radius: 12px;
+      padding: 12px 5px;
+    }
+
+    .level-title {
+      color: #7f8baa;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .level-value {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 15px;
+      font-size: 15px;
+      font-family: inherit;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+    }
+
+    .start {
+      background: #087f55;
+    }
+
+    .stop {
+      background: #9b2635;
+    }
+
+    button:active {
+      transform: scale(.98);
+    }
+
+    .bot-box {
+      background: #121a30;
+      border: 1px solid #273354;
+      border-radius: 18px;
+      padding: 17px;
+      margin-bottom: 15px;
+    }
+
+    .bot-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid #202b48;
+      font-size: 13px;
+    }
+
+    .bot-row:last-child {
+      border-bottom: none;
+    }
+
+    .muted {
+      color: #8e9ab8;
+    }
+
+    footer {
+      text-align: center;
+      color: #66728e;
+      font-size: 11px;
+      padding: 15px 0 5px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+
+      .price {
+        font-size: 34px;
+      }
+
+      .grid {
+        gap: 8px;
+      }
+
+      .card {
+        padding: 13px;
+      }
+
+      .value {
+        font-size: 18px;
+      }
+
+      canvas {
+        height: 210px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="logo">🤖 پنل ربات XAUUSD</div>
+    <div class="subtitle">
+      سیستم تحلیل و کنترل آزمایشی ربات طلا
+    </div>
+
+    <div class="status">
+      <span class="dot"></span>
+      سیستم فعال است
+    </div>
+  </header>
+
+
+  <section class="price-card">
+
+    <div class="symbol">
+      XAUUSD · GOLD
+    </div>
+
+    <div class="price" id="price">
+      0.00
+    </div>
+
+    <div class="price-change" id="change">
+      در حال دریافت اطلاعات...
+    </div>
+
+  </section>
+
+
+  <section class="grid">
+
+    <div class="card">
+      <div class="label">سیگنال</div>
+      <div class="value buy" id="signal">
+        BUY
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">قدرت سیگنال</div>
+      <div class="value" id="score">
+        0%
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">تایم‌فریم</div>
+      <div class="value">
+        15M
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">وضعیت ربات</div>
+      <div class="value buy" id="botStatus">
+        روشن
+      </div>
+    </div>
+
+  </section>
+
+
+  <section class="chart-card">
+
+    <div class="section-title">
+      📈 نمودار XAUUSD
+    </div>
+
+    <canvas id="chart"></canvas>
+
+  </section>
+
+
+  <section class="signal">
+
+    <div class="signal-title">
+      سیگنال فعلی ربات
+    </div>
+
+    <div class="signal-main buy" id="signalBig">
+      BUY
+    </div>
+
+    <div class="signal-description" id="signalText">
+      سیستم در حال تحلیل بازار است.
+    </div>
+
+    <div class="levels">
+
+      <div class="level">
+        <div class="level-title">
+          ورود
+        </div>
+
+        <div class="level-value" id="entry">
+          ---
+        </div>
+      </div>
+
+      <div class="level">
+        <div class="level-title">
+          حد ضرر
+        </div>
+
+        <div class="level-value sell" id="sl">
+          ---
+        </div>
+      </div>
+
+      <div class="level">
+        <div class="level-title">
+          حد سود
+        </div>
+
+        <div class="level-value buy" id="tp">
+          ---
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section class="controls">
+
+    <button class="start" onclick="startBot()">
+      ▶️ روشن کردن ربات
+    </button>
+
+    <button class="stop" onclick="stopBot()">
+      ⏹ خاموش کردن ربات
+    </button>
+
+  </section>
+
+
+  <section class="bot-box">
+
+    <div class="section-title">
+      ⚙️ وضعیت سیستم
+    </div>
+
+    <div class="bot-row">
+      <span class="muted">اتصال MT5</span>
+      <span id="mt5">در انتظار اتصال</span>
+    </div>
+
+    <div class="bot-row">
+      <span class="muted">حساب</span>
+      <span>Demo</span>
+    </div>
+
+    <div class="bot-row">
+      <span class="muted">نماد</span>
+      <span>XAUUSD</span>
+    </div>
+
+    <div class="bot-row">
+      <span class="muted">حالت معاملات</span>
+      <span class="neutral">آزمایشی</span>
+    </div>
+
+    <div class="bot-row">
+      <span class="muted">آخرین بروزرسانی</span>
+      <span id="lastUpdate">---</span>
+    </div>
+
+  </section>
+
+
+  <footer>
+    XAUUSD Trading Panel · Demo Version
+  </footer>
+
+</div>
+
+
+<script>
+
+let botRunning = true;
+
+let basePrice = 2650.00;
+
+let prices = [];
+
+for (let i = 0; i < 45; i++) {
+
+  basePrice += (Math.random() - 0.48) * 4;
+
+  prices.push(basePrice);
+
+}
+
+
+function randomPrice() {
+
+  let last = prices[prices.length - 1];
+
+  let movement = (Math.random() - 0.48) * 3;
+
+  let next = last + movement;
+
+  prices.push(next);
+
+  if (prices.length > 45) {
+    prices.shift();
+  }
+
+  return next;
+
+}
+
+
+function updatePrice() {
+
+  let price = randomPrice();
+
+  document.getElementById("price").textContent =
+    price.toFixed(2);
+
+  let previous = prices[prices.length - 2];
+
+  let difference = price - previous;
+
+  let change = document.getElementById("change");
+
+  if (difference >= 0) {
+
+    change.textContent =
+      "▲ +" + difference.toFixed(2) + " در حال حرکت صعودی";
+
+    change.style.color = "#49e39b";
+
+  } else {
+
+    change.textContent =
+      "▼ " + difference.toFixed(2) + " در حال حرکت نزولی";
+
+    change.style.color = "#ff6878";
+
+  }
+
+  calculateSignal(price);
+
+  drawChart();
+
+  document.getElementById("lastUpdate").textContent =
+    new Date().toLocaleTimeString("fa-IR");
+
+}
+
+
+function calculateSignal(price) {
+
+  let recent = prices.slice(-10);
+
+  let first = recent[0];
+
+  let last = recent[recent.length - 1];
+
+  let movement = last - first;
+
+  let signal =
+    document.getElementById("signal");
+
+  let signalBig =
+    document.getElementById("signalBig");
+
+  let score =
+    document.getElementById("score");
+
+  let text =
+    document.getElementById("signalText");
+
+  let entry =
+    document.getElementById("entry");
+
+  let sl =
+    document.getElementById("sl");
+
+  let tp =
+    document.getElementById("tp");
+
+
+  let strength =
+    Math.min(
+      95,
+      Math.max(
+        55,
+        Math.round(60 + Math.abs(movement) * 7)
+      )
+    );
+
+
+  score.textContent = strength + "%";
+
+
+  if (movement >= 0) {
+
+    signal.textContent = "BUY";
+
+    signal.className = "value buy";
+
+    signalBig.textContent = "BUY";
+
+    signalBig.className = "signal-main buy";
+
+    text.textContent =
+      "حرکت کوتاه‌مدت قیمت صعودی است. این سیگنال فقط برای آزمایش سیستم است.";
+
+    entry.textContent =
+      price.toFixed(2);
+
+    sl.textContent =
+      (price - 8).toFixed(2);
+
+    tp.textContent =
+      (price + 16).toFixed(2);
+
+  } else {
+
+    signal.textContent = "SELL";
+
+    signal.className = "value sell";
+
+    signalBig.textContent = "SELL";
+
+    signalBig.className = "signal-main sell";
+
+    text.textContent =
+      "حرکت کوتاه‌مدت قیمت نزولی است. این سیگنال فقط برای آزمایش سیستم است.";
+
+    entry.textContent =
+      price.toFixed(2);
+
+    sl.textContent =
+      (price + 8).toFixed(2);
+
+    tp.textContent =
+      (price - 16).toFixed(2);
+
+  }
+
+}
+
+
+function drawChart() {
+
+  let canvas =
+    document.getElementById("chart");
+
+  let ctx =
+    canvas.getContext("2d");
+
+
+  let width =
+    canvas.clientWidth;
+
+  let height =
+    canvas.clientHeight;
+
+
+  let ratio =
+    window.devicePixelRatio || 1;
+
+
+  canvas.width =
+    width * ratio;
+
+  canvas.height =
+    height * ratio;
+
+  ctx.scale(ratio, ratio);
+
+
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  let min =
+    Math.min(...prices);
+
+  let max =
+    Math.max(...prices);
+
+
+  let range =
+    max - min || 1;
+
+
+  ctx.beginPath();
+
+
+  prices.forEach((price, index) => {
+
+    let x =
+      (index / (prices.length - 1)) *
+      (width - 20) + 10;
+
+
+    let y =
+      height -
+      ((price - min) / range) *
+      (height - 30) - 15;
+
+
+    if (index === 0) {
+
+      ctx.moveTo(x, y);
+
+    } else {
+
+      ctx.lineTo(x, y);
+
+    }
+
+  });
+
+
+  ctx.strokeStyle =
+    "#49e39b";
+
+  ctx.lineWidth = 2;
+
+  ctx.stroke();
+
+
+  ctx.fillStyle =
+    "#7f8baa";
+
+  ctx.font =
+    "11px Tahoma";
+
+  ctx.fillText(
+    max.toFixed(2),
+    10,
+    15
+  );
+
+  ctx.fillText(
+    min.toFixed(2),
+    10,
+    height - 5
+  );
+
+}
+
+
+function startBot() {
+
+  botRunning = true;
+
+  document.getElementById("botStatus").textContent =
+    "روشن";
+
+  document.getElementById("botStatus").className =
+    "value buy";
+
+  document.getElementById("mt5").textContent =
+    "در انتظار اتصال";
+
+}
+
+
+function stopBot() {
+
+  botRunning = false;
+
+  document.getElementById("botStatus").textContent =
+    "خاموش";
+
+  document.getElementById("botStatus").className =
+    "value sell";
+
+  document.getElementById("signalText").textContent =
+    "ربات خاموش است. هیچ معامله‌ای انجام نمی‌شود.";
+
+}
+
+
+window.addEventListener(
+  "resize",
+  drawChart
+);
+
+
+updatePrice();
+
+
+setInterval(
+  function() {
+
+    if (botRunning) {
+      updatePrice();
+    }
+
+  },
+  3000
+);
+
+</script>
+
+</body>
+        </html>
